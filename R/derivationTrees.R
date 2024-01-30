@@ -788,6 +788,5 @@ decodeDT<-function(tree, ST)
 	return(Reduce(ST[a,1], f=paste0))
 }
 
-cat("Loaded Derivation Tree Package.\n")
-
+# end of file
 

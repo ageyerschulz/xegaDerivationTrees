@@ -56,17 +56,8 @@ rndsubk<-function(sym, k, PT)
 #'
 #' @details \code{generateDerivationTree} recursively expands 
 #'         non-terminals and builds a derivation tree.
-#'         See Ryan et al. (1998).         
 #'
 #' @return A named list l$tree, l$kvec, l$complete. 
-#'
-#' @references Ryan, C., Collins, J. J., and  O'Neill, M. (1998):
-#'         Grammatical evolution: Evolving programs for an arbitrary language, pp. 83-96.
-#'         In: 	Banzhaf, W., Poli, R., Schoenauer, M., and Fogarty, T. C. (Eds.)
-#'         Genetic Programming. First European Workshop, EuroGP' 98 Paris, 
-#'         France, April 14-15, 1998 Proceedings. Lecture Notes in Computer Science,
-#'         Vol. 1391, Springer, Heidelberg.
-#'         <doi:10.1007/BFb0055930>
 #'
 #' @family Generate Derivation Tree
 #'
@@ -103,21 +94,22 @@ generateDerivationTree<-function(sym, kvec, complete=TRUE, G, maxdepth=5)
    return(list(tree=tmp, kvec=nvec, complete=complete))
 }
 
-#' Generates \code{times} derivation trees from random 
-#' integer vectors and decodes them.
+#' Generate, decode, and show \code{times} derivation trees from random 
+#' integer vectors for grammar BNF on the console.
 #' 
 #' @param times  Number of derivation trees which should be generated.
+#' @param BNF    BNF.
 #'
 #' @return Number of complete derivation trees generated.
 #' 
 #' @family Tests
 #'
 #' @examples
-#' testGenerateDerivationTree(5)
+#' testGenerateDerivationTree(5, BNF=booleanGrammar())
 #' @export 
-testGenerateDerivationTree<-function(times)
+testGenerateDerivationTree<-function(times, BNF)
 {
-g<-compileBNF(booleanGrammar())
+g<-compileBNF(BNF)
 
 cDT<-0
 for (i in 1:times) 

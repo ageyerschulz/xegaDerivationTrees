@@ -54,9 +54,8 @@ b<-"OR(OR(NOT(D1),AND(NOT(NOT(<f1>(<fe>))),AND(NOT(<f0>),NOT(<f1>(<fe>))))),D2)"
 
 test_that("testGenerateDerivationTree OK",
 {
-        g<-compileBNF(booleanGrammar())
         set.seed(21)
-        expect_identical(testGenerateDerivationTree(5), 5)
+        expect_identical(testGenerateDerivationTree(5, booleanGrammar()), 5)
 }
 )
 
