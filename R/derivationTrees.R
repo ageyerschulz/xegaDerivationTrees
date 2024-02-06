@@ -334,13 +334,14 @@ treeChildren<-function(tree)
 #' 
 #' @details     An attributed \code{node} has the following elements:
 #'     \itemize{
-#'        \item \code{ID}
-#'        \item \code{NonTerminal}
-#'        \item \code{Pos}
-#'        \item \code{Depth}
-#'        \item \code{Rdepth}
-#'        \item \code{subtreedepth}
-#'        \item \code{node$Index}
+#'         \item \code{$ID}:  Id in the symbol table \code{ST}.
+#'         \item \code{$NT}:  Is the symbol a non-terminal?
+#'         \item \code{$Pos}: Position in the trail.
+#'         \item \code{$Depth}:  Depth of node.
+#'         \item \code{$RDepth}: Residual depth for expansion.
+#'         \item \code{$subtreedepth}: Depth of subtree starting here.
+#'         \item \code{$Index}:  R index of the node in the derivation tree.
+#'                            Allows fast tree extraction and insertion.
 #'        }
 #'    These elements can be used e.g. 
 #'    \itemize{
@@ -365,18 +366,18 @@ treeChildren<-function(tree)
 # Node$Index,
 #' @return A list with three elements:
 #'         \enumerate{
-#'         \item r$count: The trail length (not needed).
-#'         \item r$depth: The derivation tree depth (not needed).
-#'         \item r$ANL:   The attributed node list is a list of nodes.
+#'         \item \code{r$count}: The trail length (not needed).
+#'         \item \code{r$depth}: The derivation tree depth (not needed).
+#'         \item \code{r$ANL}:   The attributed node list is a list of nodes.
 #'           Each node is represented as a list of the following attributes:
 #'         \itemize{
-#'         \item Node$ID:  Id in the symbol table ST.
-#'         \item Node$NT:  Is the symbol a non-terminal?
-#'         \item Node$Pos: Position in the trail.
-#'         \item Node$Depth:  Depth of node.
-#'         \item Node$RDepth: Residual depth for expansion.
-#'         \item Node$subtreedepth: Depth of subtree starting here.
-#'         \item Node$Index:  R index of the node in the derivation tree.
+#'         \item \code{Node$ID}:  Id in the symbol table ST.
+#'         \item \code{Node$NT}:  Is the symbol a non-terminal?
+#'         \item \code{Node$Pos}: Position in the trail.
+#'         \item \code{Node$Depth}:  Depth of node.
+#'         \item \code{Node$RDepth}: Residual depth for expansion.
+#'         \item \code{Node$subtreedepth}: Depth of subtree starting here.
+#'         \item \code{Node$Index}:  R index of the node in the derivation tree.
 #'                            Allows fast tree extraction and insertion.
 #'         } 
 #'                        
@@ -410,6 +411,7 @@ treeANL<-function(tree, ST, maxdepth=5, ANL=list(), IL=list(),
     inl<-list()
     for (i in 1:length(kids))
     { 
+#### Control of the depth of the insertion point? TBD
        inl<-append(IL, paste("[[2]][[", as.character(i), "]]", sep=""))
        r<-treeANL(kids[[i]], ST, maxdepth, ANL=list(), inl, count+1, depth+1)
        count<-r$count
@@ -430,6 +432,73 @@ treeANL<-function(tree, ST, maxdepth=5, ANL=list(), IL=list(),
     r$subtreedepth<-subtreedepth+1
     r$ANL<-ANL
     return(r)
+}
+
+#' Filter an Attributed Node List (ANL) of a derivation tree.
+#'
+#' @description \code{filterANL} deletes all nodes whose depth 
+#'              \code{node$Depth}  is 
+#'              less than \code{minb} and larger than code{maxb}
+#'              from the ANL.
+#' 
+#' @details     An attributed \code{node} has the following elements:
+#'     \itemize{
+#'         \item \code{$ID}:  Id in the symbol table \code{ST}.
+#'         \item \code{$NT}:  Is the symbol a non-terminal?
+#'         \item \code{$Pos}: Position in the trail.
+#'         \item \code{$Depth}:  Depth of node.
+#'         \item \code{$RDepth}: Residual depth for expansion.
+#'         \item \code{$subtreedepth}: Depth of subtree starting here.
+#'         \item \code{$Index}:  R index of the node in the derivation tree.
+#'                            Allows fast tree extraction and insertion.
+#'        }
+#'
+#' @param ANL     An attributed node list.
+#' @param minb    Integer. 
+#' @param maxb    Integer.  
+#'
+# Node$ID, Node$NT, Node$Pos, Node$Depth, Node$RDepth, Node$subtreedepth
+# Node$Index,
+#' @return An annotated node list with nodes whose depths are in 
+#'         \code{minb:maxb}. 
+#'           Each node is represented as a list of the following attributes:
+#'         \itemize{
+#'         \item \code{Node$ID}:  Id in the symbol table ST.
+#'         \item \code{Node$NT}:  Is the symbol a non-terminal?
+#'         \item \code{Node$Pos}: Position in the trail.
+#'         \item \code{Node$Depth}:  Depth of node.
+#'         \item \code{Node$RDepth}: Residual depth for expansion.
+#'         \item \code{Node$subtreedepth}: Depth of subtree starting here.
+#'         \item \code{Node$Index}:  R index of the node in the derivation tree.
+#'                            Allows fast tree extraction and insertion.
+#'         } 
+#'
+#' @family Access Tree Parts
+#'
+#' @examples
+#' g<-compileBNF(booleanGrammar())
+#' set.seed(111)
+#' a<-randomDerivationTree(g$Start, g, maxdepth=10)
+#' b<-treeANL(a, g$ST)
+#' c<-filterANL(b, minb=1, maxb=3)
+#' d<-filterANL(b, minb=3, maxb=5)
+#' e<-filterANL(b, minb=14, maxb=15)
+#' f<-filterANL(b, minb=13, maxb=15)
+#' 
+#' @importFrom xegaBNF isTerminal
+#' @importFrom xegaBNF isNonTerminal
+#' @export
+filterANL<-function(ANL, minb=1, maxb=3)
+{ nodelist<-ANL$ANL
+  nlist<-list()
+  for (i in (1:length(nodelist)))
+  {  if (nodelist[[i]]$Depth %in% (minb:maxb))
+  {nlist<-c(nlist, nodelist[i])}
+  } 
+  if (length(nlist)==0) {nlist<-ANL$ANL}
+  return(list(count=ANL$count, 
+               subtreedepth=ANL$subtreedepth, 
+               ANL=nlist))
 }
 
 #
@@ -462,7 +531,7 @@ treeANL<-function(tree, ST, maxdepth=5, ANL=list(), IL=list(),
 #'              \dots
 #'        }
 #'
-#' @param anl     An attributed node list.
+#' @param ANL     An attributed node list.
 #'
 #' @return An attributed node.  
 #'
@@ -475,9 +544,9 @@ treeANL<-function(tree, ST, maxdepth=5, ANL=list(), IL=list(),
 #' c<-chooseNode(b$ANL)
 #'
 #' @export
-chooseNode<-function(anl)
+chooseNode<-function(ANL)
 {
-	return(anl[[sample(length(anl), 1)]])
+	return(ANL[[sample(length(ANL), 1)]])
 }
 
 #
