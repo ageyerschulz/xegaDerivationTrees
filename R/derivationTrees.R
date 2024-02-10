@@ -13,9 +13,9 @@
 #'
 #' @details Imported from package xegaBNF for use in examples.
 #'
-#' @return A named list with $filename and  $BNF, 
+#' @return A named list with elements \code{$filename} and  \code{$BNF} 
 #'         representing the grammar of a boolean grammar with two variables and
-#'         the boolean functions AND, OR, and NOT.
+#'         the boolean functions \code{AND}, \code{OR}, and \code{NOT}.
 #'
 #' @family Grammar 
 #'
@@ -27,7 +27,7 @@ booleanGrammar<-xegaBNF::booleanGrammar
 
 #' Compile a  BNF (Backus-Naur Form) of a context-free grammar.
 #' 
-#' @description \code{compileBNF} produces a context-free grammar  
+#' @description \code{compileBNF()} produces a context-free grammar  
 #'               from its specification in Backus-Naur form (BNF).   
 #'               Warning: No error checking is implemented.
 #'
@@ -44,16 +44,16 @@ booleanGrammar<-xegaBNF::booleanGrammar
 #'  \item Compile a short production table.
 #'  \item Return the grammar.}
 #' 
-#' @param g  A character string with a BNF. 
+#' @param g        A character string with a BNF. 
 #' @param verbose  Boolean. TRUE: Show progress. Default: FALSE. 
 #' 
 #' @return A grammar object (list) with the attributes 
 #'         \itemize{
-#'         \item \code{name} (the filename of the grammar),
-#'         \item \code{ST} (symbol table), 
-#'         \item \code{PT} (production table), 
-#'         \item \code{Start} (the start symbol of the grammar), and
-#'         \item \code{SPT} (the short production table).
+#'         \item \code{name}: Filename of the grammar.
+#'         \item \code{ST}: Symbol table. 
+#'         \item \code{PT}: Production table. 
+#'         \item \code{Start}: Start symbol of the grammar.
+#'         \item \code{SPT}: Short production table.
 #'         }
 #'
 #' @family Grammar
@@ -70,14 +70,14 @@ compileBNF<-xegaBNF::compileBNF
 
 #' Selects a production rule index at random from a vector of production rules.
 #'
-#' @description \code{chooseRule} selects a production rule index 
+#' @description \code{chooseRule()} selects a production rule index 
 #'      from the vector of production rule indices 
 #'      in the \code{g$PT$LHS$} for a non-terminal symbol.
 #'
-#' @param riv  The vector of production rules indices for 
+#' @param riv  Vector of production rules indices for 
 #'                    a non-terminal symbol.
 #'
-#' @return The index of the production rule. 
+#' @return Integer. Index of the production rule. 
 #'
 #' @family Random Choice
 #'
@@ -90,14 +90,14 @@ chooseRule<- function(riv) {return(riv[sample(length(riv),1)])}
 #' Codes the substitution of a non-terminal symbol by the symbols 
 #' derived by a production rule as a nested list. 
 #' 
-#' @description \code{substituteSymbol} 
+#' @description \code{substituteSymbol()} 
 #' generates a nested list with the non-terminal symbol as the root 
 #' (first list element) and the derived symbols as the second list element.
 #'
 #' @param rindex   Rule index.
-#' @param PT       A production table.
+#' @param PT       Production table.
 #'
-#' @return A 2-element list.
+#' @return 2-element list.
 #'
 #' @family Generate Derivation Tree
 #'
@@ -116,13 +116,13 @@ substituteSymbol<- function(rindex, PT)
 
 #' Transforms a non-terminal symbol into a random 1-level derivation tree.
 #'
-#' @description \code{rndsub} expands a non-terminal by a random derivation
+#' @description \code{rndsub()} expands a non-terminal by a random derivation
 #'              and returns a 1-level derivation tree.
 #'
-#' @param sym      A non-terminal symbol.
-#' @param PT       A production table.
+#' @param sym      Non-terminal symbol.
+#' @param PT       Production table.
 #'
-#' @return A 1-level derivation tree.
+#' @return Derivation tree with 1-level.
 #'
 #' @family Generate Derivation Tree
 #'
@@ -136,19 +136,19 @@ rndsub<-function(sym, PT){substituteSymbol(chooseRule(xegaBNF::rules(sym, PT$LHS
 
 #' Generates a random derivation tree.
 #'
-#' @description \code{randomDerivationTree} 
+#' @description \code{randomDerivationTree()} 
 #'    generates a random derivation tree.
 #'
-#' @details \code{RandomDerivationTree} recursively expands 
+#' @details \code{RandomDerivationTree()} recursively expands 
 #'         non-terminals and builds a depth-bounded derivation tree.
 #'
-#' @param sym          A non-terminal symbol. 
-#' @param G            A grammar. 
-#' @param maxdepth     The maximal depth of the derivation tree.    
-#' @param CompleteDT   Generate a complete derivation tree (Boolean). 
+#' @param sym          Non-terminal symbol. 
+#' @param G            Grammar. 
+#' @param maxdepth     Integer. Maximal depth of the derivation tree.    
+#' @param CompleteDT   Boolean. Generate a complete derivation tree? 
 #'                     Default: TRUE.
 #'
-#' @return A derivation tree (a nested list).
+#' @return Derivation tree (a nested list).
 #'
 #' @family Generate Derivation Tree
 #'
@@ -180,18 +180,52 @@ randomDerivationTree<-function(sym, G, maxdepth=5, CompleteDT=TRUE)
    return(tmp)   
 }
 
+#' Randomly partitions n in k parts.
+#'
+#' @description Sampling a partition is a two-step process:
+#'   \enumerate{
+#'   \item The k parts of the partion are sampled in the loop.
+#'         This implies that the first partition p is a random number 
+#'         between 1 and 1+n-k. The next partition is sampled from 
+#'         1 to 1+n-k-p. 
+#'   \item We permute the partitions.      
+#'   }
+#' 
+#' @param n   The integer to divide.
+#' @param k   Number of parts.
+#'
+#' @return The integer partition of n in k parts.    
+#'
+#' @family Unused
+#'
+#' @examples
+#'  rndPartition(10, 4)
+#'@export
+rndPartition<-function(n, k)
+{
+if (k==1) {return(n)}
+r<-rep(0,k)
+nn<-1+n-k
+for (i in (1:(k-1)))
+{ r[i]<-sample(1:nn, 1)
+nn<-1+nn-r[i] }
+r[k]<-n-sum(r)
+p<-sample(k, k, replace=FALSE)
+return(r[p])
+}
+
 #
 # Measures of tree attributes
 #
 
 #' Measures the depth of a (nested) list.
 #'
-#' @description \code{treeListDepth} returns the depth of a nested list.  
+#' @description \code{treeListDepth()} returns the depth of a nested list.  
 #'              For a derivation tree, this is approximately twice
 #'              the derivation depth.
 #'
-#' @param t       A list.
-#' @param tDepth  List depth. Default: 0.
+#' @param t       List.
+#' @param tDepth  Integer. List depth. Default: 0.
 #'
 #' @return Depth of a nested list.
 #'
@@ -213,12 +247,12 @@ treeListDepth <- function(t,tDepth=0){
 
 #' Measures the number of symbols in a derivation tree.
 #'
-#' @description \code{treeSize} returns the number of symbols in a 
+#' @description \code{treeSize()} returns the number of symbols in a 
 #'              derivation tree.
 #'
-#' @param tree    A derivation tree.
+#' @param tree    Derivation tree.
 #'
-#' @return The  number of symbols in a derivation tree.
+#' @return Integer. Number of symbols in a derivation tree.
 #'
 #' @family Measures of Tree Attributes
 #'
@@ -233,14 +267,14 @@ treeSize<-function(tree)
 
 #' Measures the number of inner nodes in a derivation tree.
 #'
-#' @description \code{treeSize} returns 
+#' @description \code{treeNodes()} returns 
 #'              the number of non-terminal symbols in a 
-#'              complete derivation tree.
+#'              derivation tree.
 #'
-#' @param tree     A derivation tree.
-#' @param ST     A symbol table.
+#' @param tree   Derivation tree.
+#' @param ST     Symbol table.
 #'
-#' @return The  number of non-terminal symbols in a complete derivation tree.
+#' @return Integer. Number of non-terminal symbols in a derivation tree.
 #'
 #' @family Measures of Tree Attributes
 #'
@@ -254,16 +288,16 @@ treeSize<-function(tree)
 treeNodes<-function(tree, ST)
 { return(sum(unlist(lapply(unlist(tree),FUN=xegaBNF::isNonTerminal, ST=ST))))}
 
-#' Measures the number of leaves of a derivation tree.
+#' Measures the number of leaves of a complete derivation tree.
 #'
-#' @description \code{treeSize} returns 
+#' @description \code{treeLeaves()} returns 
 #'              the number of terminal symbols in a 
 #'              complete derivation tree.
 #'
-#' @param tree     A derivation tree.
-#' @param ST     A symbol table.
+#' @param tree    Derivation tree.
+#' @param ST      Symbol table.
 #'
-#' @return The  number of terminal symbols in a complete derivation tree.
+#' @return Integer. Number of terminal symbols in a complete derivation tree.
 #'
 #' @family Measures of Tree Attributes
 #'
@@ -284,11 +318,11 @@ treeLeaves<-function(tree, ST)
 
 #' Returns the root of a derivation tree.
 #'
-#' @description \code{treeRoot} returns the root of a derivation tree.
+#' @description \code{treeRoot()} returns the root of a derivation tree.
 #'
-#' @param tree     A derivation tree.
+#' @param tree  Derivation tree.
 #'
-#' @return The root of a derivation tree.
+#' @return Root of a derivation tree.
 #'
 #' @examples
 #' g<-compileBNF(booleanGrammar())
@@ -303,10 +337,10 @@ treeRoot<-function(tree)
 
 #' Returns the children of a derivation tree.
 #'
-#' @description \code{treeChildren} returns the children of a derivation tree
+#' @description \code{treeChildren()} returns the children of a derivation tree
 #'          represented as a list of derivation trees.
 #'
-#' @param tree     A derivation tree.
+#' @param tree     Derivation tree.
 #'
 #' @return The children of a derivation tree (a list of derivation trees).
 #'
@@ -328,7 +362,7 @@ treeChildren<-function(tree)
 
 #' Builds an Attributed Node List (ANL) of a derivation tree.
 #'
-#' @description \code{treeANL} recursively traverses a derivation tree
+#' @description \code{treeANL()} recursively traverses a derivation tree
 #'     and collects information about the derivation tree in an attributed
 #'     node list (ANL).
 #' 
@@ -434,12 +468,15 @@ treeANL<-function(tree, ST, maxdepth=5, ANL=list(), IL=list(),
     return(r)
 }
 
-#' Filter an Attributed Node List (ANL) of a derivation tree.
+#' Filter an Attributed Node List (ANL) of a derivation tree by depth.
 #'
-#' @description \code{filterANL} deletes all nodes whose depth 
+#' @description \code{filterANL()} deletes all nodes whose depth 
 #'              \code{node$Depth}  is 
-#'              less than \code{minb} and larger than code{maxb}
-#'              from the ANL.
+#'              less than \code{minb} and larger than \code{maxb}
+#'              from the ANL. 
+#'              However, if the resulting list is empty, the original
+#'              ANL is returned.
+#'              
 #' 
 #' @details     An attributed \code{node} has the following elements:
 #'     \itemize{
@@ -453,13 +490,11 @@ treeANL<-function(tree, ST, maxdepth=5, ANL=list(), IL=list(),
 #'                            Allows fast tree extraction and insertion.
 #'        }
 #'
-#' @param ANL     An attributed node list.
+#' @param ANL     Attributed node list.
 #' @param minb    Integer. 
 #' @param maxb    Integer.  
 #'
-# Node$ID, Node$NT, Node$Pos, Node$Depth, Node$RDepth, Node$subtreedepth
-# Node$Index,
-#' @return An annotated node list with nodes whose depths are in 
+#' @return An attributed node list with nodes whose depths are in 
 #'         \code{minb:maxb}. 
 #'           Each node is represented as a list of the following attributes:
 #'         \itemize{
@@ -501,13 +536,79 @@ filterANL<-function(ANL, minb=1, maxb=3)
                ANL=nlist))
 }
 
+#' Filter an Attributed Node List (ANL) of a derivation tree by a symbol identifier.
+#'
+#' @description \code{filterANLid()} deletes all nodes whose \code{node$ID} does not match 
+#'              \code{node$ID}.
+#'              If the resulting list is empty, a list of length 0 is returned.
+#' 
+#' @details     An attributed \code{node} has the following elements:
+#'     \itemize{
+#'         \item \code{$ID}:  Id in the symbol table \code{ST}.
+#'         \item \code{$NT}:  Is the symbol a non-terminal?
+#'         \item \code{$Pos}: Position in the trail.
+#'         \item \code{$Depth}:  Depth of node.
+#'         \item \code{$RDepth}: Residual depth for expansion.
+#'         \item \code{$subtreedepth}: Depth of subtree starting here.
+#'         \item \code{$Index}:  R index of the node in the derivation tree.
+#'                            Allows fast tree extraction and insertion.
+#'        }
+#'
+#' For the implementation of crossover and mutation, we expect a non-terminal symbol identifier.  
+#'
+#' @param ANL       Attributed node list.
+#' @param nodeID    Integer. The identifier of a symbol. 
+#'
+# Node$ID, Node$NT, Node$Pos, Node$Depth, Node$RDepth, Node$subtreedepth
+# Node$Index,
+#' @return An attributed node list with nodes whose depths are in 
+#'         \code{minb:maxb}. 
+#'           Each node is represented as a list of the following attributes:
+#'         \itemize{
+#'         \item \code{Node$ID}:  Id in the symbol table ST.
+#'         \item \code{Node$NT}:  Is the symbol a non-terminal?
+#'         \item \code{Node$Pos}: Position in the trail.
+#'         \item \code{Node$Depth}:  Depth of node.
+#'         \item \code{Node$RDepth}: Residual depth for expansion.
+#'         \item \code{Node$subtreedepth}: Depth of subtree starting here.
+#'         \item \code{Node$Index}:  R index of the node in the derivation tree.
+#'                            Allows fast tree extraction and insertion.
+#'         } 
+#'
+#' @family Access Tree Parts
+#'
+#' @examples
+#' g<-compileBNF(booleanGrammar())
+#' set.seed(111)
+#' a<-randomDerivationTree(g$Start, g, maxdepth=10)
+#' b<-treeANL(a, g$ST)
+#' c<-filterANLid(b, nodeID=5)
+#' d<-filterANLid(b, nodeID=6)
+#' e<-filterANLid(b, nodeID=7)
+#' f<-filterANLid(b, nodeID=8)
+#' 
+#' @importFrom xegaBNF isTerminal
+#' @importFrom xegaBNF isNonTerminal
+#' @export
+filterANLid<-function(ANL, nodeID=1)
+{ nodelist<-ANL$ANL
+  nlist<-list()
+  for (i in (1:length(nodelist)))
+  {  if (nodelist[[i]]$ID == nodeID)
+  {nlist<-c(nlist, nodelist[i])}
+  } 
+  return(list(count=ANL$count, 
+               subtreedepth=ANL$subtreedepth, 
+               ANL=nlist))
+}
+
 #
 # Random choice in node list.
 #
 
 #' Selects an attributed node in an attributed node list randomly.
 #'
-#' @description \code{chooseNode} returns  a random attributed node 
+#' @description \code{chooseNode()} returns  a random attributed node 
 #'              from an attributed node list
 #  
 #' @details     An attributed \code{node} has the following elements:
@@ -531,9 +632,9 @@ filterANL<-function(ANL, minb=1, maxb=3)
 #'              \dots
 #'        }
 #'
-#' @param ANL     An attributed node list.
+#' @param ANL     Attributed node list.
 #'
-#' @return An attributed node.  
+#' @return Attributed node.  
 #'
 #' @family Random Choice
 #'
@@ -558,12 +659,12 @@ chooseNode<-function(ANL)
 #  
 # TODO: Replace 3 by Max derivations needed in SPT.
 
-#' Test the compatibility of subtrees
+#' Test the compatibility of subtrees.
 #'
-#' @description \code{compatibleSubtrees} tests the compatibility of two 
+#' @description \code{compatibleSubtrees()} tests the compatibility of two 
 #'        subtrees. 
 #'     
-#' @details \code{compatibleSubtrees} tests the compatibility of two 
+#' @details \code{compatibleSubtrees()} tests the compatibility of two 
 #'        subtrees:
 #'        \enumerate{
 #'      \item The root symbol of the two subtrees must be identical:
@@ -576,14 +677,14 @@ chooseNode<-function(ANL)
 #'               maxSPT is the maximal number of derivations needed 
 #'                to generate a complete derivation tree.}
 #'
-#' @param n1      An attributed node of the root of subtree 1     
-#' @param n2      An attributed node of the root of subtree 2 
-#' @param maxdepth The maximal derivation depth.
+#' @param n1      Attributed node of the root of subtree 1.    
+#' @param n2      Attributed node of the root of subtree 2. 
+#' @param maxdepth Integer. Maximal derivation depth.
 #' @param DepthBounded \itemize{
-#'                  \item \code{TRUE} Only subtrees 
+#'                  \item \code{TRUE}: Only subtrees 
 #'                         with the same root symbol and which respect 
 #'                        the depth restrictions are compatible. 
-#'                  \item \code{FALSE} The depth restrictions are not 
+#'                  \item \code{FALSE}: The depth restrictions are not 
 #'                                      checked.}
 #'                       
 #' @family Tree Operations 
@@ -618,7 +719,7 @@ compatibleSubtrees<-function(n1, n2, maxdepth=5, DepthBounded=TRUE)
 
 #' Extracts the subtree at position \code{pos} in a derivation tree.
 #'
-#' @description \code{treeExtract} returns 
+#' @description \code{treeExtract()} returns 
 #'              the subtree at position \code{pos} in a derivation tree.
 #'
 #' @details     An attributed \code{node} is a list 
@@ -634,10 +735,10 @@ compatibleSubtrees<-function(n1, n2, maxdepth=5, DepthBounded=TRUE)
 #'              the result of parsing and evaluating the string.
 #'              }
 #'
-#' @param tree     A derivation tree.
-#' @param node     An attributed node.
+#' @param tree     Derivation tree.
+#' @param node     Attributed node.
 #'
-#' @return A derivation tree.
+#' @return Derivation tree.
 #'
 #' @family Tree Operations 
 #'
@@ -664,7 +765,7 @@ treeExtract<-function(tree, node)
 
 #' Inserts a subtree into a derivation tree at a \code{node}.
 #'
-#' @description \code{treeInsert} inserts a \code{subtree} into 
+#' @description \code{treeInsert()} inserts a \code{subtree} into 
 #'              a \code{tree} at a \code{node}.
 #'              
 #' @details     An attributed \code{node} is a list 
@@ -679,9 +780,9 @@ treeExtract<-function(tree, node)
 #'              \item to parse and evaluate the string.
 #'              }
 #'
-#' @param tree     A derivation tree.
-#' @param subtree  A subtree.
-#' @param node     An attributed node.
+#' @param tree     Derivation tree.
+#' @param subtree  Subtree.
+#' @param node     Attributed node.
 #'
 #' @return A derivation tree.
 #'
@@ -711,13 +812,13 @@ treeInsert<-function(tree, subtree, node)
 #' Returns a list of all symbols of a derivation tree  
 #' in depth-first left-to-right order.
 #'
-#' @description \code{decodeTree} returns a
+#' @description \code{decodeTree()} returns a
 #'              list of all symbols of a derivation tree 
 #'              in depth-first left-to-right order
 #'              (coded as R Factor with the symbol identifiers as levels).
 #'
-#' @param tree     A derivation tree.
-#' @param ST     A symbol table.
+#' @param tree     Derivation tree.
+#' @param ST       Symbol table.
 #'
 #' @return List of all symbols in depth-first left-to-right order.
 #'
@@ -736,17 +837,17 @@ decodeTree<-function(tree, ST)
 
 #' Converts a complete derivation tree into a program.
 #'
-#' @description \code{decodeCDT} returns a program
+#' @description \code{decodeCDT()} returns a program
 #'              (a text string with the terminal symbol string).
 #'              If the derivation tree still has non-terminal leaves,
 #'              the non-terminal leaves are omitted.
 #'              The program produces a syntax error.
 #'              The program can not be repaired.
 #'
-#' @param tree     A derivation tree.
-#' @param ST     A symbol table.
+#' @param tree     Derivation tree.
+#' @param ST       Symbol table.
 #'
-#' @return A program.
+#' @return Program.
 #'
 #' @family Decoder
 #'
@@ -775,11 +876,11 @@ decodeCDT<-function(tree, ST)
 #' @details Must perform a depth-first left-to-right tree traversal to collect 
 #'          all leave symbols (terminal and non-terminal symbols). 
 #'
-#' @param tree     A derivation tree.
-#' @param ST     A symbol table.
-#' @param leavesList   A list of symbol identifiers. 
+#' @param tree            Derivation tree.
+#' @param ST              Symbol table.
+#' @param leavesList      List of symbol identifiers. 
 #'
-#' @return A list of symbol identifiers.
+#' @return List of symbol identifiers.
 #'
 #' @family Decoder
 #'
@@ -812,10 +913,10 @@ leavesIncompleteDT<-function(tree, ST, leavesList=list())
 #' Decodes a derivation tree into a list of the leaf symbols
 #' of the derivation tree.
 #'
-#' @param tree     A derivation tree.
-#' @param ST     A symbol table.
+#' @param tree     Derivation tree.
+#' @param ST       Symbol table.
 #'
-#' @return A list of the leaf symbols of the derivation tree.
+#' @return List of the leaf symbols of the derivation tree.
 #'
 #' @family Decoder
 #'
@@ -837,10 +938,10 @@ decodeDTsym<-function(tree, ST)
 #' @description The program may contain non-terminal symbols
 #'              and its evaluation may fail.
 #'
-#' @param tree     A derivation tree.
-#' @param ST     A symbol table.
+#' @param tree     Derivation tree.
+#' @param ST       Symbol table.
 #'
-#' @return A program
+#' @return Program
 #'
 #' @family Decoder
 #'

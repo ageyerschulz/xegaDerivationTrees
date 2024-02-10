@@ -72,6 +72,35 @@ b<-"OR(OR(NOT(D1),AND(NOT(NOT(<f1>(<fe>))),AND(NOT(<f0>),NOT(<f1>(<fe>))))),D2)"
 }
 )
 
+
+test_that("rndPartition k=1 OK",
+{
+n<-sample(2:10,1)
+a1<-rndPartition(n, 1)
+expect_equal(n, a1)
+}       
+)
+
+
+test_that("rndPartition k=n OK",
+{
+n<-sample(2:10,1)
+a1<-rndPartition(n, n)
+expect_identical(rep(1,n), a1)
+}
+)
+
+test_that("rndPartition (k in (2:(n-1)), n OK",
+{
+n<-sample(2:10,1)
+k<-sample(2:9,1)
+a1<-rndPartition(n, k)
+expect_equal(sum(a1), n)
+expect_identical(all(a1>0), TRUE)
+expect_identical(all(a1<n), TRUE)
+}
+)
+
 test_that("treeListDepth OK",
 {
         g<-compileBNF(booleanGrammar())
@@ -147,7 +176,7 @@ test_that("treeANL OK",
 }
 )
 
-test_that("choodeNode OK",
+test_that("chooseNode OK",
 {
     g<-compileBNF(booleanGrammar())
     set.seed(21)
@@ -156,6 +185,44 @@ test_that("choodeNode OK",
     node<-chooseNode(t1anl$ANL)
     expect_identical(names(node), 
     c("ID", "NonTerminal", "Pos", "Depth", "Rdepth", "subtreedepth", "Index"))  
+}
+)
+
+test_that("filterANL OK",
+{
+    g<-compileBNF(booleanGrammar())
+    set.seed(111)
+    t1<-randomDerivationTree(g$Start, g, maxdepth=10)
+    t1anl<-treeANL(t1, g$ST)
+    expect_identical(names(t1anl), c("count", "subtreedepth", "ANL"))
+    expect_equal(t1anl$count, 17)
+    expect_equal(t1anl$subtreedepth, 5)
+    t1f1<-filterANL(t1anl, minb=1, maxb=10)
+    expect_identical(t1anl$ANL, t1f1$ANL)
+    t1f2<-filterANL(t1anl, minb=1, maxb=3)
+    expect_identical(identical(t1anl$ANL, t1f2$ANL), FALSE)
+    t1f3<-filterANL(t1anl, minb=5, maxb=10)
+    expect_identical(identical(t1anl$ANL, t1f3$ANL), TRUE)
+
+}
+)
+
+test_that("filterANLid OK",
+{   
+    g<-compileBNF(booleanGrammar())
+    set.seed(111)
+    t1<-randomDerivationTree(g$Start, g, maxdepth=10)
+    t1anl<-treeANL(t1, g$ST)
+    t1s8<-filterANLid(t1anl, nodeID=8)
+    expect_equal(length(t1s8$ANL), 4)
+    t1s7<-filterANLid(t1anl, nodeID=7)
+    expect_equal(length(t1s7$ANL), 1)
+    t1s6<-filterANLid(t1anl, nodeID=6)
+    expect_equal(length(t1s6$ANL), 1)
+    t1s5<-filterANLid(t1anl, nodeID=5)
+    expect_equal(length(t1s5$ANL), 2)
+    t1s9<-filterANLid(t1anl, nodeID=9)
+    expect_equal(length(t1s9$ANL), 0)
 }
 )
 

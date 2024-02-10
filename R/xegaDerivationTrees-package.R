@@ -7,6 +7,14 @@
 #' for subtree extraction and insertion are formally introduced in Geyer-Schulz (1997)
 #' and used for implementing mutation and crossover operations. 
 #'
+#' Efficient selection of random subtrees is implemented by building a list of annotated 
+#' tree nodes by a left-right depth-first tree traversal. For each node, the R-index 
+#' to access the subtree is built and stored in the node. The R-index element of a node 
+#' allows subtree extraction and insertion operations with the cost of the R-index operation.  
+#' In addition, filtering operations the node list by different criteria (min depth, max depth, and 
+#' non-terminal symbol type) allow the implementation of flexible and
+#' configurable crossover and mutation operations.
+#'
 #' @references  Geyer-Schulz, Andreas (1997):
 #'          \emph{Fuzzy Rule-Based Expert Systems and Genetic Machine Learning},
 #'                Physica, Heidelberg.

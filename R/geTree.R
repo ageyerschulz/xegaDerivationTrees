@@ -1,13 +1,13 @@
 
 #' Selects k-th production rule index from a vector of production rules.
 #'
-#' @description \code{chooseRulek} selects the k-th production rule index 
+#' @description \code{chooseRulek()} selects the k-th production rule index 
 #'      from the vector of production rule indices 
 #'      in the \code{g$PT$LHS$} for a non-terminal symbol.
 #'
-#' @param riv  The vector of production rules indices for 
+#' @param riv  Vector of production rules indices for 
 #'                    a non-terminal symbol.
-#' @param k   Integer.
+#' @param k    Integer. 
 #'
 #' @return The index of the production rule. 
 #'
@@ -22,14 +22,14 @@ chooseRulek<- function(riv, k) {return(riv[1+(k%%length(riv))])}
 #' Transforms a non-terminal symbol into a 1-level derivation tree 
 #' for a given k.
 #'
-#' @description \code{rndsubk} expands a non-terminal by a derivation
+#' @description \code{rndsubk()} expands a non-terminal by a derivation
 #'              specified by k and returns a 1-level derivation tree.
 #'
-#' @param sym      A non-terminal symbol.
+#' @param sym      Non-terminal symbol.
 #' @param k        Codon (An integer). 
-#' @param PT       A production table.
+#' @param PT       Production table.
 #'
-#' @return A 1-level derivation tree.
+#' @return 1-level derivation tree.
 #'
 #' @family Generate Derivation Tree
 #'
@@ -44,17 +44,17 @@ rndsubk<-function(sym, k, PT)
 
 #' Generates a derivation tree from an integer vector.
 #'
-#' @description \code{generateDerivationTree} 
+#' @description \code{generateDerivationTree()} 
 #'    generates a derivation tree from an integer vector.
 #'    The derivation tree may be incomplete.
 #'
-#' @param sym          A non-terminal symbol. 
+#' @param sym          Non-terminal symbol. 
 #' @param kvec         Integer vector.
 #' @param complete     Boolean. FALSE for incomplete derivation trees.
-#' @param G            A grammar. 
-#' @param maxdepth     The maximal depth of the derivation tree.    
+#' @param G            Grammar. 
+#' @param maxdepth     Integer. Maximal depth of the derivation tree.    
 #'
-#' @details \code{generateDerivationTree} recursively expands 
+#' @details \code{generateDerivationTree()} recursively expands 
 #'         non-terminals and builds a derivation tree.
 #'
 #' @return A named list l$tree, l$kvec, l$complete. 
