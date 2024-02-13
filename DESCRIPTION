@@ -7,17 +7,18 @@ Authors@R:
            role = c("aut", "cre"),
            email = "Andreas.Geyer-Schulz@kit.edu",
            comment = c(ORCID = "0009-0000-5237-3579"))
-Description: Functions 
-            to generate a random derivation tree of a context-free grammar 
-            of bounded depth, 
-            to decode a derivation tree, 
-            to choose a random node in a derivation tree, 
-            to extract a tree whose root is a specified node, and 
-            to insert a subtree into a derivation tree at a specified node.
-            These functions are necessary for implementing the initializing and 
-            decoding of a random population of programs, 
-            as well as for implementing 
-            crossover and mutation operators for programs.  
+Description: Derivation tree operations are needed for implementing 
+            grammar-based genetic programming and grammatical evolution:  
+            Generating of a random derivation trees of a context-free grammar 
+            of bounded depth, decoding a derivation tree, 
+            choosing a random node in a derivation tree, 
+            extracting a tree whose root is a specified node, and 
+            inserting a subtree into a derivation tree at a specified node.
+            These operations are necessary for the initialization and 
+            for decoders of a random population of programs, 
+            as well as for implementing crossover and mutation operators.
+            Depth-bounds are guaranteed by switching to a grammar 
+            without recursive production rules. 
             For executing the examples, the package 'BNF' is needed.
             The basic tree operations of generating, extracting, and 
             inserting of derivation trees as well as the conditions 

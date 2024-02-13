@@ -97,8 +97,9 @@ generateDerivationTree<-function(sym, kvec, complete=TRUE, G, maxdepth=5)
 #' Generate, decode, and show \code{times} derivation trees from random 
 #' integer vectors for grammar BNF on the console.
 #' 
-#' @param times  Number of derivation trees which should be generated.
-#' @param BNF    BNF.
+#' @param times     Number of derivation trees which should be generated.
+#' @param BNF       BNF.
+#' @param verbose   Boolean. If TRUE (default) , print decoded derivation tree on console.  
 #'
 #' @return Number of complete derivation trees generated.
 #' 
@@ -107,7 +108,7 @@ generateDerivationTree<-function(sym, kvec, complete=TRUE, G, maxdepth=5)
 #' @examples
 #' testGenerateDerivationTree(5, BNF=booleanGrammar())
 #' @export 
-testGenerateDerivationTree<-function(times, BNF)
+testGenerateDerivationTree<-function(times, BNF, verbose=TRUE)
 {
 g<-compileBNF(BNF)
 
@@ -117,8 +118,9 @@ for (i in 1:times)
 a<-sample(100, 100, replace=TRUE)
 b<-generateDerivationTree(sym=g$Start, kvec= a, complete=TRUE, G=g, maxdepth=10)
 if (b$complete) {cDT<-cDT+1}
-cat("Derivation Tree", i, "Complete:", b$complete, "\n")
-cat(decodeDT(b$tree, g$ST), "\n")
+if (verbose)
+   { cat("Derivation Tree", i, "Complete:", b$complete, "\n")
+     cat(decodeDT(b$tree, g$ST), "\n")}
 }
 return(cDT)
 }
