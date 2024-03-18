@@ -1,6 +1,6 @@
 Package: xegaDerivationTrees
 Title: Generating and Manipulating Derivation Trees
-Version: 1.0.0.0
+Version: 1.0.0.1
 Authors@R: 
     person(given = "Andreas",
            family = "Geyer-Schulz",
@@ -9,7 +9,7 @@ Authors@R:
            comment = c(ORCID = "0009-0000-5237-3579"))
 Description: Derivation tree operations are needed for implementing 
             grammar-based genetic programming and grammatical evolution:  
-            Generating of a random derivation trees of a context-free grammar 
+            Generating a random derivation trees of a context-free grammar 
             of bounded depth, decoding a derivation tree, 
             choosing a random node in a derivation tree, 
             extracting a tree whose root is a specified node, and 
@@ -20,8 +20,8 @@ Description: Derivation tree operations are needed for implementing
             Depth-bounds are guaranteed by switching to a grammar 
             without recursive production rules. 
             For executing the examples, the package 'BNF' is needed.
-            The basic tree operations of generating, extracting, and 
-            inserting of derivation trees as well as the conditions 
+            The basic tree operations for generating, extracting, and 
+            inserting derivation trees as well as the conditions 
             for guaranteeing complete derivation trees have been 
             presented in Geyer-Schulz (1997, ISBN:978-3-7908-0830-X).
             The use of random integer vectors for the generation 

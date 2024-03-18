@@ -72,7 +72,7 @@ compileBNF<-xegaBNF::compileBNF
 #'
 #' @description \code{chooseRule()} selects a production rule index 
 #'      from the vector of production rule indices 
-#'      in the \code{g$PT$LHS$} for a non-terminal symbol.
+#'      in the \code{g$PT$LHS} for a non-terminal symbol.
 #'
 #' @param riv  Vector of production rules indices for 
 #'                    a non-terminal symbol.
@@ -369,10 +369,10 @@ treeChildren<-function(tree)
 #' @details     An attributed \code{node} has the following elements:
 #'     \itemize{
 #'         \item \code{$ID}:  Id in the symbol table \code{ST}.
-#'         \item \code{$NT}:  Is the symbol a non-terminal?
+#'         \item \code{$NonTerminal}:  Is the symbol a non-terminal?
 #'         \item \code{$Pos}: Position in the trail.
 #'         \item \code{$Depth}:  Depth of node.
-#'         \item \code{$RDepth}: Residual depth for expansion.
+#'         \item \code{$Rdepth}: Residual depth for expansion.
 #'         \item \code{$subtreedepth}: Depth of subtree starting here.
 #'         \item \code{$Index}:  R index of the node in the derivation tree.
 #'                            Allows fast tree extraction and insertion.
@@ -396,20 +396,18 @@ treeChildren<-function(tree)
 #' @param count    Trail count (1 on invocation).
 #' @param depth    Derivation tree depth (1 on invocation).
 #'
-# Node$ID, Node$NT, Node$Pos, Node$Depth, Node$RDepth, Node$subtreedepth
-# Node$Index,
 #' @return A list with three elements:
 #'         \enumerate{
-#'         \item \code{r$count}: The trail length (not needed).
-#'         \item \code{r$depth}: The derivation tree depth (not needed).
-#'         \item \code{r$ANL}:   The attributed node list is a list of nodes.
+#'         \item \code{$count}: The trail length (not needed).
+#'         \item \code{$subtreedepth}: The derivation tree depth (not needed).
+#'         \item \code{$ANL}:   The attributed node list is a list of nodes.
 #'           Each node is represented as a list of the following attributes:
 #'         \itemize{
 #'         \item \code{Node$ID}:  Id in the symbol table ST.
-#'         \item \code{Node$NT}:  Is the symbol a non-terminal?
+#'         \item \code{Node$NonTerminal}:  Is the symbol a non-terminal?
 #'         \item \code{Node$Pos}: Position in the trail.
 #'         \item \code{Node$Depth}:  Depth of node.
-#'         \item \code{Node$RDepth}: Residual depth for expansion.
+#'         \item \code{Node$Rdepth}: Residual depth for expansion.
 #'         \item \code{Node$subtreedepth}: Depth of subtree starting here.
 #'         \item \code{Node$Index}:  R index of the node in the derivation tree.
 #'                            Allows fast tree extraction and insertion.
@@ -481,10 +479,10 @@ treeANL<-function(tree, ST, maxdepth=5, ANL=list(), IL=list(),
 #' @details     An attributed \code{node} has the following elements:
 #'     \itemize{
 #'         \item \code{$ID}:  Id in the symbol table \code{ST}.
-#'         \item \code{$NT}:  Is the symbol a non-terminal?
+#'         \item \code{$NonTerminal}:  Is the symbol a non-terminal?
 #'         \item \code{$Pos}: Position in the trail.
 #'         \item \code{$Depth}:  Depth of node.
-#'         \item \code{$RDepth}: Residual depth for expansion.
+#'         \item \code{$Rdepth}: Residual depth for expansion.
 #'         \item \code{$subtreedepth}: Depth of subtree starting here.
 #'         \item \code{$Index}:  R index of the node in the derivation tree.
 #'                            Allows fast tree extraction and insertion.
@@ -499,10 +497,10 @@ treeANL<-function(tree, ST, maxdepth=5, ANL=list(), IL=list(),
 #'           Each node is represented as a list of the following attributes:
 #'         \itemize{
 #'         \item \code{Node$ID}:  Id in the symbol table ST.
-#'         \item \code{Node$NT}:  Is the symbol a non-terminal?
+#'         \item \code{Node$NonTerminal}:  Is the symbol a non-terminal?
 #'         \item \code{Node$Pos}: Position in the trail.
 #'         \item \code{Node$Depth}:  Depth of node.
-#'         \item \code{Node$RDepth}: Residual depth for expansion.
+#'         \item \code{Node$Rdepth}: Residual depth for expansion.
 #'         \item \code{Node$subtreedepth}: Depth of subtree starting here.
 #'         \item \code{Node$Index}:  R index of the node in the derivation tree.
 #'                            Allows fast tree extraction and insertion.
@@ -545,10 +543,10 @@ filterANL<-function(ANL, minb=1, maxb=3)
 #' @details     An attributed \code{node} has the following elements:
 #'     \itemize{
 #'         \item \code{$ID}:  Id in the symbol table \code{ST}.
-#'         \item \code{$NT}:  Is the symbol a non-terminal?
+#'         \item \code{$NonTerminal}:  Is the symbol a non-terminal?
 #'         \item \code{$Pos}: Position in the trail.
 #'         \item \code{$Depth}:  Depth of node.
-#'         \item \code{$RDepth}: Residual depth for expansion.
+#'         \item \code{$Rdepth}: Residual depth for expansion.
 #'         \item \code{$subtreedepth}: Depth of subtree starting here.
 #'         \item \code{$Index}:  R index of the node in the derivation tree.
 #'                            Allows fast tree extraction and insertion.
@@ -559,17 +557,15 @@ filterANL<-function(ANL, minb=1, maxb=3)
 #' @param ANL       Attributed node list.
 #' @param nodeID    Integer. The identifier of a symbol. 
 #'
-# Node$ID, Node$NT, Node$Pos, Node$Depth, Node$RDepth, Node$subtreedepth
-# Node$Index,
 #' @return An attributed node list with nodes whose depths are in 
 #'         \code{minb:maxb}. 
 #'           Each node is represented as a list of the following attributes:
 #'         \itemize{
 #'         \item \code{Node$ID}:  Id in the symbol table ST.
-#'         \item \code{Node$NT}:  Is the symbol a non-terminal?
+#'         \item \code{Node$NonTerminal}:  Is the symbol a non-terminal?
 #'         \item \code{Node$Pos}: Position in the trail.
 #'         \item \code{Node$Depth}:  Depth of node.
-#'         \item \code{Node$RDepth}: Residual depth for expansion.
+#'         \item \code{Node$Rdepth}: Residual depth for expansion.
 #'         \item \code{Node$subtreedepth}: Depth of subtree starting here.
 #'         \item \code{Node$Index}:  R index of the node in the derivation tree.
 #'                            Allows fast tree extraction and insertion.
@@ -606,10 +602,10 @@ filterANLid<-function(ANL, nodeID=1)
 # Random choice in node list.
 #
 
-#' Selects an attributed node in an attributed node list randomly.
+#' Randomly selects an attributed node in an attributed node list.
 #'
 #' @description \code{chooseNode()} returns  a random attributed node 
-#'              from an attributed node list
+#'              from an attributed node list.
 #  
 #' @details     An attributed \code{node} has the following elements:
 #'     \itemize{
@@ -619,7 +615,7 @@ filterANLid<-function(ANL, nodeID=1)
 #'        \item \code{Depth}
 #'        \item \code{Rdepth}
 #'        \item \code{subtreedepth}
-#'        \item \code{node$Index}
+#'        \item \code{Index}
 #'        }
 #'    These elements can be used e.g. 
 #'    \itemize{
@@ -634,7 +630,7 @@ filterANLid<-function(ANL, nodeID=1)
 #'
 #' @param ANL     Attributed node list.
 #'
-#' @return Attributed node.  
+#' @return An attributed node.  
 #'
 #' @family Random Choice
 #'
@@ -682,7 +678,7 @@ chooseNode<-function(ANL)
 #' @param maxdepth Integer. Maximal derivation depth.
 #' @param DepthBounded \itemize{
 #'                  \item \code{TRUE}: Only subtrees 
-#'                         with the same root symbol and which respect 
+#'                         with the same root symbol that respect 
 #'                        the depth restrictions are compatible. 
 #'                  \item \code{FALSE}: The depth restrictions are not 
 #'                                      checked.}
@@ -847,7 +843,7 @@ decodeTree<-function(tree, ST)
 #' @param tree     Derivation tree.
 #' @param ST       Symbol table.
 #'
-#' @return Program.
+#' @return A program.
 #'
 #' @family Decoder
 #'
@@ -941,7 +937,7 @@ decodeDTsym<-function(tree, ST)
 #' @param tree     Derivation tree.
 #' @param ST       Symbol table.
 #'
-#' @return Program
+#' @return A program
 #'
 #' @family Decoder
 #'

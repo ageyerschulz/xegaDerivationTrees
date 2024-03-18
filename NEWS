@@ -1,0 +1,11 @@
+-------------------------------------------------------------------------
+  xegaDerivationTrees                                              News
+-------------------------------------------------------------------------
+
+Version 1.0.0.1 (2024-03-18)
+
+- Corrected typos in documentation:
+  chooseNode(), chooseRule(), chooseRulek(), 
+  compatibleSubtrees(), decodeCDT(), decodeFT(),
+  treeANL(), filterANL(), and filterANLid()
+

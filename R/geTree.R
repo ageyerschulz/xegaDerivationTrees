@@ -3,9 +3,9 @@
 #'
 #' @description \code{chooseRulek()} selects the k-th production rule index 
 #'      from the vector of production rule indices 
-#'      in the \code{g$PT$LHS$} for a non-terminal symbol.
+#'      in the \code{g$PT$LHS} for a non-terminal symbol.
 #'
-#' @param riv  Vector of production rules indices for 
+#' @param riv  Vector of production rule indices for 
 #'                    a non-terminal symbol.
 #' @param k    Integer. 
 #'
