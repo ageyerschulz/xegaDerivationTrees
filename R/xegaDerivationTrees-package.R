@@ -72,7 +72,6 @@
 #' 
 #' @name xegaDerivationTrees
 #' @aliases xegaDerivationTrees
-#' @docType package
 #' @title Package xegaDerivationTrees
 #' @author Andreas Geyer-Schulz
 #' @section Copyright: (c) 2023 Andreas Geyer-Schulz
@@ -80,4 +79,4 @@
 #' @section URL: <https://github.com/ageyerschulz/xegaDerivationTrees>
 #' @section Installation: 
 #' From cran with \code{install.packages("xegaDerivationTrees")}
-NULL
+"_PACKAGE"

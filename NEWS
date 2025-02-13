@@ -9,3 +9,9 @@ Version 1.0.0.1 (2024-03-18)
   compatibleSubtrees(), decodeCDT(), decodeFT(),
   treeANL(), filterANL(), and filterANLid()
 
+Version 1.0.0.2 (2025-02-23)
+
+- decodeAndFixDT(): randomly completes derivation trees generated
+                    from finite length random integer vectors
+                    (for grammatical evolution).
+

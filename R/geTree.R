@@ -47,6 +47,7 @@ rndsubk<-function(sym, k, PT)
 #' @description \code{generateDerivationTree()} 
 #'    generates a derivation tree from an integer vector.
 #'    The derivation tree may be incomplete.
+#'    (For grammatical evolution).
 #'
 #' @param sym          Non-terminal symbol. 
 #' @param kvec         Integer vector.
@@ -73,10 +74,10 @@ generateDerivationTree<-function(sym, kvec, complete=TRUE, G, maxdepth=5)
 {
    if (xegaBNF::isTerminal(sym, G$ST))
    { return(list(tree=sym, kvec=kvec, complete=complete)) }
-
+   #
    if (length(kvec)==0)
    { return(list(tree=sym, kvec=kvec, complete=complete)) }
-
+   #
    tmp<-rndsubk(sym, kvec[1], G$PT)
    if (length(kvec)==1) 
    {  # cat("integers used up.\n")
@@ -93,6 +94,40 @@ generateDerivationTree<-function(sym, kvec, complete=TRUE, G, maxdepth=5)
    tmp[[2]]<-l
    return(list(tree=tmp, kvec=nvec, complete=complete))
 }
+
+#' Decodes (and completes) a derivation tree into a working program.
+#'
+#' @description The program is guaranteed to work.
+#'
+#' @param tree     Derivation tree.
+#' @param g        A Grammar.
+#' @param kvec     A random integer vector.
+#'
+#' @return A program
+#'
+#' @family Decoder
+#'
+#' @examples
+#' g<-compileBNF(booleanGrammar())
+#' complete<-TRUE
+#' while (complete) {
+#' t1<-generateDerivationTree(sym=g$Start,sample(100, 10, replace=TRUE), G=g)
+#' complete<-t1$complete}
+#' decodeAndFixDT(t1$tree, g, sample(100, 10, replace=TRUE)) 
+#'
+#' @importFrom xegaBNF isTerminal
+#' @export
+decodeAndFixDT<-function(tree, g, kvec)
+{ g1<-g; g1$PT<-g$SPT
+nkvec<-kvec; expr<-""
+c<-unlist(leavesIncompleteDT(tree, g$ST))
+for (i in (1:length(c)))
+{ if (xegaBNF::isTerminal(c[i], g$ST)) {expr<-paste(expr, g$ST$Symbols[c[i]], sep="")}
+  else
+    {d<-generateDerivationTree(sym=g$ST$SymbolId[c[i]], kvec=nkvec, G=g1)
+     nkvec<-d$kvec; expr<-paste(expr,decodeDT(d$tree,g$ST), sep="") }
+}
+return(expr) }
 
 #' Generate, decode, and show \code{times} derivation trees from random 
 #' integer vectors for grammar BNF on the console.
@@ -111,16 +146,17 @@ generateDerivationTree<-function(sym, kvec, complete=TRUE, G, maxdepth=5)
 testGenerateDerivationTree<-function(times, BNF, verbose=TRUE)
 {
 g<-compileBNF(BNF)
-
 cDT<-0
 for (i in 1:times) 
-{
-a<-sample(100, 100, replace=TRUE)
+{ a<-sample(100, 100, replace=TRUE)
 b<-generateDerivationTree(sym=g$Start, kvec= a, complete=TRUE, G=g, maxdepth=10)
 if (b$complete) {cDT<-cDT+1}
 if (verbose)
    { cat("Derivation Tree", i, "Complete:", b$complete, "\n")
-     cat(decodeDT(b$tree, g$ST), "\n")}
+     cat(decodeDT(b$tree, g$ST), "\n")
+     if (!b$complete)
+     { cat("Fixed Derivation Tree", i, "\n")
+       cat(decodeAndFixDT(tree=b$tree, g=g, kvec=a), "\n\n") }}
 }
 return(cDT)
 }

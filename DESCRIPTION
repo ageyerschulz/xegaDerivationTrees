@@ -1,6 +1,6 @@
 Package: xegaDerivationTrees
 Title: Generating and Manipulating Derivation Trees
-Version: 1.0.0.1
+Version: 1.0.0.2
 Authors@R: 
     person(given = "Andreas",
            family = "Geyer-Schulz",
@@ -27,12 +27,12 @@ Description: Derivation tree operations are needed for implementing
             The use of random integer vectors for the generation 
             of derivation trees has been introduced in 
             Ryan, C., Collins, J. J., and  O'Neill, M. (1998)
-            <doi:10.1007/BFb0055930>. 
+            <doi:10.1007/BFb0055930> for grammatical evolution.
 License: MIT + file LICENSE
-URL: <https://github.com/ageyerschulz/xegaDerivationTrees>
+URL: https://github.com/ageyerschulz/xegaDerivationTrees
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Suggests: testthat (>= 3.0.0)
 Imports:
 	xegaBNF
