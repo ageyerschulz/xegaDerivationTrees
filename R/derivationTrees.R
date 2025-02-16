@@ -312,6 +312,38 @@ treeNodes<-function(tree, ST)
 treeLeaves<-function(tree, ST)
 { return(sum(unlist(lapply(unlist(tree),FUN=xegaBNF::isTerminal, ST=ST))))}
 
+#' A lower bound for the probability of generating \code{tree} by grammar \code{G}.
+#'
+#' @description \code{treeProbabilityLB()} returns lower bound for the 
+#'              probability of generating the derivation tree \code{tree} 
+#'              by the context-free grammar \code{G}. 
+#'              The probability is exact, if the grammar is not ambiguous and
+#'              if the grammar does not contain redundant rule.
+#'             
+#' @param tree    Derivation tree.
+#' @param G       A context-free grammar. 
+#'
+#' @return Real. The lower bound of the probability of generating \code{tree} 
+#'               by grammar \code{G}.
+#'
+#' @family Diagnostics.
+#'
+#' @examples
+#' g<-compileBNF(booleanGrammar())
+#' a<-randomDerivationTree(g$Start, g)
+#' decodeTree(a, g$ST) 
+#' treeProbabilityLB(tree=a, G=g)
+#'
+#' @importFrom xegaBNF isNonTerminal
+#' @importFrom xegaBNF rules 
+#' @export
+treeProbabilityLB<-function(tree, G)
+{Prob<-function(symbol, G)
+{if(xegaBNF::isNonTerminal(symbol, G$ST))
+     {return(1/length(xegaBNF::rules(symbol, G$PT$LHS)))}
+else {return(1.0)}}
+return(prod(unlist(lapply(unlist(tree),FUN=Prob, G=G))))}
+
 #
 # tree Helpers:
 #
