@@ -17,7 +17,11 @@ Version 1.0.0.2 (2025-02-13)
 
 Version 1.0.0.3 (2025-02-16)
 
-- treeProbabilityLB(): lower bound of generating a derivation tree t
-                       for grammar g. Exact for unambiguous grammars
+- treeProbability(): path probability of generating a derivation tree t
+                       for grammar g. Unique for unambiguous grammars
                        without redundant rules.
+
+Version 1.0.0.4 (2025-02-18)
+
+- printDerivations(): print the list of derivations for a derivation tree.
 
