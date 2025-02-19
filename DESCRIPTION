@@ -1,6 +1,6 @@
 Package: xegaDerivationTrees
 Title: Generating and Manipulating Derivation Trees
-Version: 1.0.0.4
+Version: 1.0.0.5
 Authors@R: 
     person(given = "Andreas",
            family = "Geyer-Schulz",

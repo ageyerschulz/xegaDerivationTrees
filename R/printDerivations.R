@@ -19,6 +19,11 @@ decodeSymVec<-function(v, ST)
 
 #' Print derivations.
 #'
+#' @description A depth-first left-to-right tree traversal
+#'               without recursion. 
+#'
+#' @details Does not work with incomplete derivation trees.
+#' 
 #' @param tree     Derivation tree.
 #' @param G        The context-free grammar.
 #' @param verbose  If TRUE, the list of derivations is printed.
@@ -49,10 +54,12 @@ printDerivations<-function(tree, G, verbose=FALSE)
   pre<-vector()
   while (!length(post)==0)
   { if (xegaBNF::isTerminal(post[1], G$ST))
-    {pt<-utils::tail(pt, -1); pre<-unlist(c(pre,post[1]));post<-tail(post, -1)} 
-    else
-       {fst<-treeChildren(pt[[1]])
-        post<-unlist(c((lapply(fst, FUN=treeRoot)), tail(post,-1)))
+       {pt<-utils::tail(pt, -1)
+        pre<-unlist(c(pre,post[1]))
+        post<-utils::tail(post, -1)} 
+   else  # branch for non-expanded terminals is missing.
+       { fst<-treeChildren(pt[[1]])
+        post<-unlist(c((lapply(fst, FUN=treeRoot)), utils::tail(post,-1)))
         pt<-c(fst, utils::tail(pt, -1))
         line<-c(pre, post)
         if (verbose) {cat("=>", decodeSymVec(line, G$ST), "\n")}
