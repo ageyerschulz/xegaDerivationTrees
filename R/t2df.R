@@ -7,6 +7,8 @@
 #'              
 #' @return Data frame.
 #'
+#' @family Data frames for igraph
+#'
 #' @example
 #' df<-newV()
 #'
@@ -21,6 +23,8 @@ newV<-function()
 #'              \code{to} kid (numerical identifier).
 #'              
 #' @return Data frame.
+#'
+#' @family Data frames for igraph
 #'
 #' @example
 #' df<-newE()
@@ -40,6 +44,8 @@ newE<-function()
 #' @example
 #' df<-addV(newV(), 1, "<fe>")
 #'
+#' @family Data frames for igraph
+#'
 #' @export
 addV<-function(df, id, name)
 {return(rbind(df, data.frame(id=id, name=name)))}
@@ -53,6 +59,8 @@ addV<-function(df, id, name)
 #' @param  to    Vector of integers (numerical identifiers of kids of vertex).
 #'
 #' @return A Data frame for edges.
+#'
+#' @family Data frames for igraph
 #'
 #' @example
 #' df<-addE(newE(), 1, c(2, 3, 4))

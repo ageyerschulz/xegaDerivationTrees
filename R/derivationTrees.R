@@ -326,7 +326,7 @@ treeLeaves<-function(tree, ST)
 #' @return Real. The probability of generating \code{tree} 
 #'               by grammar \code{G}.
 #'
-#' @family Diagnostics.
+#' @family Measures of Tree Attributes
 #'
 #' @examples
 #' g<-compileBNF(booleanGrammar())
