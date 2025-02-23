@@ -22,7 +22,7 @@ decodeSymVec<-function(v, ST)
 #' @description A depth-first left-to-right tree traversal
 #'               without recursion. 
 #'
-#' @details Does not work with incomplete derivation trees.
+#' @details Works with complete and incomplete derivation trees.
 #' 
 #' @param tree     Derivation tree.
 #' @param G        The context-free grammar.
@@ -57,14 +57,20 @@ printDerivations<-function(tree, G, verbose=FALSE)
        {pt<-utils::tail(pt, -1)
         pre<-unlist(c(pre,post[1]))
         post<-utils::tail(post, -1)} 
-   else  # branch for non-expanded terminals is missing.
-       { fst<-treeChildren(pt[[1]])
-        post<-unlist(c((lapply(fst, FUN=treeRoot)), utils::tail(post,-1)))
-        pt<-c(fst, utils::tail(pt, -1))
-        line<-c(pre, post)
-        if (verbose) {cat("=>", decodeSymVec(line, G$ST), "\n")}
-        l[[i]]<-decodeSymVec(line, G$ST); i<-i+1
-        } }
+    else 
+     { if (1==length(pt[[1]]))
+       #    { stop("Incomplete decision tree.\n")}
+       {pt<-utils::tail(pt, -1)
+        pre<-unlist(c(pre,post[1]))
+        post<-utils::tail(post, -1)} 
+        else
+          { fst<-treeChildren(pt[[1]])
+           post<-unlist(c((lapply(fst, FUN=treeRoot)), utils::tail(post,-1)))
+           pt<-c(fst, utils::tail(pt, -1))
+           line<-c(pre, post)
+           if (verbose) {cat("=>", decodeSymVec(line, G$ST), "\n")}
+           l[[i]]<-decodeSymVec(line, G$ST); i<-i+1
+           } } }
  return(l)  
 }
 

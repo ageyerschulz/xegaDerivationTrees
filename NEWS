@@ -27,8 +27,11 @@ Version 1.0.0.4 (2025-02-18)
 
 Version 1.0.0.5 (2025-02-19)
 
-- tree2dataframes() and helper functions: 
+- treeToDataFrames() and helper functions: 
   Converts a complete derivation tree into data frames suitable 
   to generate an igraph plot of the derivation tree.
   
+Version 1.0.0.6 (2025-02-21)
 
+- printDerivations and treeToDataFrames work with complete and 
+  incomplete derivation trees.

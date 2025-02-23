@@ -9,8 +9,9 @@
 #'
 #' @family Data frames for igraph
 #'
-#' @example
+#' @examples
 #' df<-newV()
+#' print(df) 
 #'
 #' @export
 newV<-function()
@@ -26,8 +27,9 @@ newV<-function()
 #'
 #' @family Data frames for igraph
 #'
-#' @example
+#' @examples
 #' df<-newE()
+#' print(df) 
 #'
 #' @export
 newE<-function()
@@ -41,8 +43,9 @@ newE<-function()
 #'
 #' @return A Data frame for vertices.
 #'
-#' @example
+#' @examples
 #' df<-addV(newV(), 1, "<fe>")
+#' print(df) 
 #'
 #' @family Data frames for igraph
 #'
@@ -62,8 +65,9 @@ addV<-function(df, id, name)
 #'
 #' @family Data frames for igraph
 #'
-#' @example
+#' @examples
 #' df<-addE(newE(), 1, c(2, 3, 4))
+#' print(df) 
 #'
 #' @export
 addE<-function(df, from, to)
@@ -76,7 +80,7 @@ addE<-function(df, from, to)
 #'              With the R-package \code{igraph} the data frames 
 #'              can be plotted as a derivation tree.
 #'
-#' @details Does not work with incomplete derivation trees.
+#' @details Works with complete and incomplete derivation trees.
 #'
 #' @param tree     Derivation tree.
 #' @param G        The context-free grammar.
@@ -126,19 +130,26 @@ treeToDataFrames<-function(tree, G, verbose)
      post<-utils::tail(post, -1)
      pid<-utils::tail(pid,-1)} 
     else 
-       {fst<-treeChildren(pt[[1]])
-        post<-unlist(c((lapply(fst, FUN=treeRoot)), utils::tail(post,-1)))
-        fstsym<-unlist((lapply(fst, FUN=treeRoot)))
-        newids<-id+(1:length(fstsym))
-        E<-addE(E, from=pid[1], to=newids)
-        id<-id+length(newids)
-        for (j in (1:length(newids))) 
-           {V<-addV(V, id=newids[j], name=decodeSymVec(fstsym[j], G$ST))} 
-        pid<-c(newids, utils::tail(pid, -1))
-        pt<-c(fst, utils::tail(pt, -1))
-        line<-c(pre, post)
-        if (verbose) {cat("=>", decodeSymVec(line, G$ST), "\n")}
-        } }
+       { if (1==length(pt[[1]]))
+        #   { stop("Incomplete decision tree.\n")}
+       {pt<-utils::tail(pt, -1) 
+        pre<-unlist(c(pre,post[1]))
+        post<-utils::tail(post, -1)
+        pid<-utils::tail(pid,-1)} 
+        else
+           {fst<-treeChildren(pt[[1]])
+           post<-unlist(c((lapply(fst, FUN=treeRoot)), utils::tail(post,-1)))
+           fstsym<-unlist((lapply(fst, FUN=treeRoot)))
+           newids<-id+(1:length(fstsym))
+           E<-addE(E, from=pid[1], to=newids)
+           id<-id+length(newids)
+           for (j in (1:length(newids))) 
+              {V<-addV(V, id=newids[j], name=decodeSymVec(fstsym[j], G$ST))} 
+           pid<-c(newids, utils::tail(pid, -1))
+           pt<-c(fst, utils::tail(pt, -1))
+           line<-c(pre, post)
+           if (verbose) {cat("=>", decodeSymVec(line, G$ST), "\n")}
+          } } }
  return(list(V=V, E=E))  
 }
 
