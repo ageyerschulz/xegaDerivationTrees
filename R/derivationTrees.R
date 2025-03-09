@@ -735,7 +735,7 @@ chooseNode<-function(ANL)
 compatibleSubtrees<-function(n1, n2, maxdepth=5, DepthBounded=TRUE)
 {
 	if (!identical(n1$ID, n2$ID)) {return(FALSE)}
-	if (identical(DepthBounded,FALSE))       {return(TRUE)}
+	if (identical(DepthBounded, FALSE)) {return(TRUE)}
 	if (((n1$Depth+n2$subtreedepth)<(maxdepth+3)) &&
 	((n2$Depth+n1$subtreedepth)<(maxdepth+3)))
 	{ return(TRUE)} else {return(FALSE)}

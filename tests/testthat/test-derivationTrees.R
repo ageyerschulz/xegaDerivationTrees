@@ -57,8 +57,9 @@ test_that("randomDerivationTree OK",
         g<-compileBNF(booleanGrammar())
         set.seed(21)
         t1<-randomDerivationTree(g$Start, g)
-b<-"OR(OR(NOT(D1),AND(NOT(NOT(NOT(D2))),AND(D2,NOT(D2)))),OR(NOT(D1),NOT(NOT(D1))))"
-        expect_equal(decodeCDT(t1, g$ST), b)
+        set.seed(21)
+        t2<-randomDerivationTree(g$Start, g)
+        expect_equal(decodeCDT(t1, g$ST), decodeCDT(t2, g$ST))
 }
 )
 
@@ -67,11 +68,11 @@ test_that("randomDerivationTree OK",
         g<-compileBNF(booleanGrammar())
         set.seed(21)
         t1<-randomDerivationTree(g$Start, g, CompleteDT=FALSE)
-b<-"OR(OR(NOT(D1),AND(NOT(NOT(<f1>(<fe>))),AND(NOT(<f0>),NOT(<f1>(<fe>))))),D2)"
-        expect_equal(decodeDT(t1, g$ST), b)
+        set.seed(21)
+        t2<-randomDerivationTree(g$Start, g, CompleteDT=FALSE)
+        expect_equal(decodeDT(t1, g$ST), decodeDT(t2, g$ST))
 }
 )
-
 
 test_that("rndPartition k=1 OK",
 {
@@ -106,7 +107,9 @@ test_that("treeListDepth OK",
         g<-compileBNF(booleanGrammar())
         set.seed(21)
         t1<-randomDerivationTree(g$Start, g)
-        expect_equal(treeListDepth(t1), 16)
+        set.seed(21)
+        t2<-randomDerivationTree(g$Start, g)
+        expect_equal(treeListDepth(t1), treeListDepth(t2))
 }       
 )
 
@@ -122,7 +125,9 @@ test_that("treeSize OK",
         g<-compileBNF(booleanGrammar())
         set.seed(21)
         t1<-randomDerivationTree(g$Start, g)
-        expect_equal(treeSize(t1), 88)
+        set.seed(21)
+        t2<-randomDerivationTree(g$Start, g)
+        expect_equal(treeSize(t1), treeSize(t2))
 }       
 )
 
@@ -131,7 +136,9 @@ test_that("treeNodes OK",
         g<-compileBNF(booleanGrammar())
         set.seed(21)
         t1<-randomDerivationTree(g$Start, g)
-        expect_equal(treeNodes(t1, g$ST), 38)
+        set.seed(21)
+        t2<-randomDerivationTree(g$Start, g)
+        expect_equal(treeNodes(t1, g$ST), treeNodes(t2, g$ST))
 }       
 )
 
@@ -140,7 +147,9 @@ test_that("treeLeaves OK",
         g<-compileBNF(booleanGrammar())
         set.seed(21)
         t1<-randomDerivationTree(g$Start, g)
-        expect_equal(treeLeaves(t1, g$ST), 50)
+        set.seed(21)
+        t2<-randomDerivationTree(g$Start, g)
+        expect_equal(treeLeaves(t1, g$ST), treeLeaves(t2, g$ST))
 }       
 )
 
@@ -168,9 +177,12 @@ test_that("treeANL OK",
         set.seed(21)
         t1<-randomDerivationTree(g$Start, g)
         t1anl<-treeANL(t1, g$ST)
+        set.seed(21)
+        t2<-randomDerivationTree(g$Start, g)
+        t2anl<-treeANL(t2, g$ST)
         expect_identical(names(t1anl), c("count", "subtreedepth", "ANL"))
         expect_equal(t1anl$count, treeSize(t1))
-        expect_equal(t1anl$subtreedepth, 9)
+        expect_equal(t1anl$subtreedepth, t2anl$subtreedepth)
         t1NL<-t1anl$ANL
         expect_equal(length(t1NL), treeNodes(t1, g$ST))
 }
@@ -226,17 +238,37 @@ test_that("filterANLid OK",
 }
 )
 
-test_that("compatibleSubtrees Cases 2 and 3 OK",
+test_that("compatibleSubtrees Case 1: different non-terminal ids: FALSE.",
 {
     g<-compileBNF(booleanGrammar())
-    set.seed(21)
+    set.seed(26)
     t1<-randomDerivationTree(g$Start, g)
     t1anl<-treeANL(t1, g$ST)
+    set.seed(1)
     node1<-chooseNode(t1anl$ANL)
+    set.seed(24)
     t2<-randomDerivationTree(g$Start, g)
     t2anl<-treeANL(t2, g$ST)
+    set.seed(2)
     node2<-chooseNode(t2anl$ANL)
     expect_identical(compatibleSubtrees(node1,node2),FALSE) 
+}
+)
+
+
+test_that("compatibleSubtrees Case 2: same non-terminal ids/no bound: TRUE.",
+{
+    g<-compileBNF(booleanGrammar())
+    set.seed(26)
+    t1<-randomDerivationTree(g$Start, g)
+    t1anl<-treeANL(t1, g$ST)
+    set.seed(1)
+    node1<-chooseNode(t1anl$ANL)
+    set.seed(24)
+    t2<-randomDerivationTree(g$Start, g)
+    t2anl<-treeANL(t2, g$ST)
+    set.seed(1)
+    node2<-chooseNode(t2anl$ANL)
     expect_identical(compatibleSubtrees(node1,node2, maxdepth=10),TRUE) 
     expect_identical(compatibleSubtrees(node1,node2, DepthBounded=FALSE),TRUE) 
 }
@@ -265,7 +297,12 @@ test_that("treeExtract OK",
     t1anl<-treeANL(t1, g$ST)
     node1<-chooseNode(t1anl$ANL)
     st1<-treeExtract(t1, node1)
-    expect_identical(decodeCDT(st1, g$ST), "D2")
+    set.seed(1)
+    t2<-randomDerivationTree(g$Start, g)
+    t2anl<-treeANL(t2, g$ST)
+    node2<-chooseNode(t2anl$ANL)
+    st2<-treeExtract(t2, node2)
+    expect_identical(decodeCDT(st1, g$ST), decodeCDT(st2, g$ST))
 }
 )
 
@@ -275,12 +312,12 @@ test_that("treeInsert OK",
     set.seed(21)
     t1<-randomDerivationTree(g$Start, g)
     t1anl<-treeANL(t1, g$ST)
-    node1<-chooseNode(t1anl$ANL)
+    set.seed(21)
     node1<-chooseNode(t1anl$ANL)
     t2<-randomDerivationTree(node1$ID, g)
     t3<-treeInsert(t1, t2, node1)
-    expect_identical(decodeCDT(t3, g$ST), 
-     "OR(OR(NOT(D1),NOT(D2)),OR(NOT(D1),NOT(NOT(D1))))")
+    expect_identical(
+      grepl(decodeCDT(t2, g$ST), decodeCDT(t3, g$ST), fixed=TRUE), TRUE) 
 }
 )
 

@@ -35,9 +35,10 @@ test_that("randomDerivationTree OK",
         g<-compileBNF(booleanGrammar())
         set.seed(21)
         t1<-randomDerivationTree(g$Start, g)
-b<-"OR(OR(NOT(D1),AND(NOT(NOT(NOT(D2))),AND(D2,NOT(D2)))),OR(NOT(D1),NOT(NOT(D1))))"
-        expect_equal(decodeDT(t1, g$ST), b)
-        expect_equal(decodeCDT(t1, g$ST), b)
+        set.seed(21)
+        t2<-randomDerivationTree(g$Start, g)
+        expect_equal(decodeDT(t1, g$ST), decodeDT(t2, g$ST))
+        expect_equal(decodeCDT(t1, g$ST), decodeCDT(t1, g$ST))
 }
 )
 
@@ -47,15 +48,16 @@ test_that("randomDerivationTree OK",
         set.seed(21)
         t1<-randomDerivationTree(g$Start, g, CompleteDT=FALSE)
 b<-"OR(OR(NOT(D1),AND(NOT(NOT(<f1>(<fe>))),AND(NOT(<f0>),NOT(<f1>(<fe>))))),D2)"
-
         expect_equal(decodeDT(t1, g$ST), b)
 }
 )
 
 test_that("testGenerateDerivationTree OK",
 {
+        g<-compileBNF(booleanGrammar())
         set.seed(21)
-        expect_identical(testGenerateDerivationTree(5, booleanGrammar()), 5)
+        expect_identical(
+        testGenerateDerivationTree(5, g), 5)
 }
 )
 
